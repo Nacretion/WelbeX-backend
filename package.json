@@ -1,0 +1,30 @@
+{
+  "name": "welbex-backend",
+  "version": "1.0.0",
+  "description": "test task for backend vacancy wrote on node.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "server": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nacretion/WelbeX-backend.git"
+  },
+  "author": "Nacretion",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nacretion/WelbeX-backend/issues"
+  },
+  "homepage": "https://github.com/Nacretion/WelbeX-backend#readme",
+  "dependencies": {
+    "config": "^3.3.7",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.5",
+    "pg": "^8.7.3"
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
