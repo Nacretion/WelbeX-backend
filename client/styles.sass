@@ -1,3 +1,96 @@
 *
   margin: 0
   padding: 0
+
+html
+  height: 100vh
+  width: 100vw
+
+body
+  margin: 0
+  padding: 0
+
+header
+  height: 100px
+  padding: 0 100px
+
+  display: flex
+  align-items: center
+  justify-content: end
+
+main
+  background-color: #eee
+  height: 100%
+
+  padding: 0 30%
+
+  display: flex
+  flex-direction: column
+  align-items: center
+
+.post
+  margin: 10px 0
+  width: 100%
+  border: 1px solid teal
+
+hr
+  margin: 0 10px
+  opacity: 0.3
+
+h2, h4
+  margin: 10px
+
+h4
+  margin-left: 20px
+
+button
+  padding: 10px
+  border: 1px solid teal
+  &:hover
+    background-color: teal
+    color: #fff
+
+.modal
+  display: none
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background-color: rgba(0, 0, 0, 0.3)
+
+
+  .content
+    padding: 5vh 5vw
+    display: flex
+    flex-direction: column
+    align-items: center
+
+    border-radius: 10px
+    height: 300px
+    width: 200px
+    background-color: white
+
+    .heading
+      width: 100%
+      display: flex
+      justify-content: center
+      margin-bottom: 5vh
+
+    label
+      max-width: 300px
+      margin: 1vh 0
+
+      display: flex
+      flex-direction: column
+      justify-content: space-between
+
+
+.active
+  display: flex
+  align-items: center
+  justify-content: center
+
+@media screen and (max-width: 1140px)
+  main
+    padding: 0 10%

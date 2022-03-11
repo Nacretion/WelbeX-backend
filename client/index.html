@@ -1,22 +1,81 @@
 <!doctype html>
-<html lang="ru">
+<html lang="eu">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="styles.css">
-    <title>Document</title>
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <link href="styles.css" rel="stylesheet">
+    <title>WelbeX</title>
 </head>
-<body>
+<body onclick="hideModal()">
     <header>
-
+        <button onclick="changeModal()">
+            Log in
+        </button>
     </header>
-    <main>
+
+    <main id="main">
 
     </main>
-    <footer>
 
-    </footer>
+    <div class="modal" id="register">
+        <div class="content" onclick="event.stopPropagation()">
+            <div class="heading">
+                <a href="#" onclick="changeModal('log_in')">Log in \ </a>
+                <p> Register</p>
+            </div>
+            <label>
+                Username
+                <input name="username"/>
+            </label>
+            <label>
+                Password
+                <input type="password" name="password"/>
+            </label>
+            <label>
+                Repeat password
+                <input type="password" name="re_password"/>
+            </label>
+            <button onclick="register(this)">
+                Continue
+            </button>
+        </div>
+    </div>
+
+    <div class="modal" id="log_in">
+        <div class="content" onclick="event.stopPropagation()">
+            <div class="heading">
+                <p>Log in \ </p>
+                <a href="#" onclick="changeModal('reg')"> Register</a>
+            </div>
+            <label>
+                Username
+                <input name="username"/>
+            </label>
+            <label>
+                Password
+                <input type="password" name="password"/>
+            </label>
+            <button onclick="login(this)">
+                Continue
+            </button>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+

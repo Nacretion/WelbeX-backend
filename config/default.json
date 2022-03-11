@@ -1,3 +1,4 @@
 {
-  "port": 5000
+  "port": 5000,
+  "jwtSecret": "xm+do>@N8Ba$lw~eHMO6rQy2FC_U}u7TAg;_U(n4M@WRi{BSRmC'x9N8[vxk'-G"
 }

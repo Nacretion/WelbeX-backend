@@ -9,6 +9,10 @@ class  PostController {
             [title, content, userId])
         result.json(newPost.rows[0])
     }
+    async getPosts(request, result){
+        const posts = await db.query("SELECT * FROM post")
+        result.json(posts.rows)
+    }
     async getPostsByUser(request, result){
         const id = request.query.id
         const posts = await db.query(
