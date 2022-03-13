@@ -33,12 +33,13 @@ class UserController {
                 if (!isMatch) {
                     return result.status(400).json({message: "incorrect password"})
                 }
+
                 const token = jwt.sign(
                     {userID: id},
                     config.get("jwtSecret"),
                     {expiresIn: "1h"}
                 )
-                result.json({token, userId: id})
+                result.json({token, id})
             } else result.json("That user not exists")
         } catch (e) {
             result.json("server " + e.message)
@@ -53,6 +54,7 @@ class UserController {
             result.json(e.message)
         }
     }
+
     async getUser(request, result) {
         try {
             const id = request.params.id

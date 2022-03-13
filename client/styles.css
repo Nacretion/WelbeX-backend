@@ -9,8 +9,7 @@ html {
 }
 
 body {
-  margin: 0;
-  padding: 0;
+  height: calc(100% - 100px);
 }
 
 header {
@@ -47,6 +46,19 @@ h2, h4 {
 
 h4 {
   margin-left: 20px;
+}
+
+.username {
+  margin-right: 10px;
+  text-transform: capitalize;
+  font-weight: bold;
+  color: teal;
+}
+
+.controllers {
+  padding: 2%;
+  width: 100%;
+  border-bottom: 1px solid teal;
 }
 
 button {
@@ -89,6 +101,15 @@ button:hover {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+.modal .content textarea {
+  width: 200px;
+  height: 100px;
+  resize: none;
+}
+
+.postCreate {
+  align-items: start !important;
 }
 
 .active {

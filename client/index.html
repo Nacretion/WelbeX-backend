@@ -9,15 +9,43 @@
     <title>WelbeX</title>
 </head>
 <body onclick="hideModal()">
-    <header>
-        <button onclick="changeModal()">
+    <header id="header">
+        <button id="loginButton" name="authButton" onclick="changeModal()">
             Log in
         </button>
     </header>
 
     <main id="main">
-
+        <div class="controllers">
+            <button id="createButton" name="createButton" onclick="showCreateModal()">
+                Make a post
+            </button>
+        </div>
     </main>
+
+
+    <div class="modal" id="postCreate">
+        <div class="content postCreate" onclick="event.stopPropagation()">
+            <div class="heading">
+                <p>Make a post</p>
+            </div>
+            <label>
+                Heading
+                <input name="title"/>
+            </label>
+            <label>
+                Content
+                <textarea  name="content"></textarea>
+            </label>
+            <label>
+                Files
+                <input type="file" multiple id="files"/>
+            </label>
+            <button onclick="createPost()">
+                Continue
+            </button>
+        </div>
+    </div>
 
     <div class="modal" id="register">
         <div class="content" onclick="event.stopPropagation()">
@@ -57,7 +85,7 @@
                 Password
                 <input type="password" name="password"/>
             </label>
-            <button onclick="login(this)">
+            <button onclick="fetchLogin()">
                 Continue
             </button>
         </div>
