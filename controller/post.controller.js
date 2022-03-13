@@ -32,17 +32,20 @@ class  PostController {
     }
     async getPosts(request, result){
         const posts = await db.query("SELECT * FROM post")
-        const filePaths = {}
-        posts.rows.map(async post => {
-            const files = await db.query("SELECT * FROM file WHERE post_id = $1", [post.rows[0].id])
-            if (files && files.length > 0) {
-                files.rows.map(async file => {
-                    filePaths.push({path: file.path})
-                })
+        let filePaths = []
+        for (let i = 0; i < posts.rows.length; i++) {
+            const files = await db.query("SELECT * FROM file WHERE post_id = $1", [posts.rows[i].id])
+            if (files) {
+                for (let i = 0; i < files.rows.length; i++) {
+                    filePaths.push(files.rows[i].path.replace('\\', "/"))
+                }
             }
-        })
-        result.json(posts.rows, filePaths)
+        }
+
+        console.log(filePaths)
+        result.json({posts: posts.rows, filePaths})
     }
+
     async getPostsByUser(request, result){
         const id = request.query.id
         const posts = await db.query(

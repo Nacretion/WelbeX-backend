@@ -6,6 +6,7 @@ const bodyParser= require('body-parser')
 
 const userRouter = require("./routes/user.routes")
 const postRouter = require("./routes/post.routes")
+const fileRouter = require("./routes/file.routes")
 
 const corsOptions = {origin: '*'}
 
@@ -36,5 +37,6 @@ app.use(express.static('public'))
 
 app.use("/api", userRouter)
 app.use("/api", postRouter)
+app.use("/", fileRouter)
 
 app.listen(PORT, () => console.log("started successfully on port", PORT))
