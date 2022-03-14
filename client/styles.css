@@ -108,6 +108,22 @@ button:hover {
   resize: none;
 }
 
+.postImage {
+  height: 50px;
+  margin: 5px;
+  cursor: pointer;
+}
+.postImage:hover {
+  padding: 1px;
+  border: 1px solid teal;
+}
+
+.postVideo {
+  width: 90%;
+  margin: 5px;
+  cursor: pointer;
+}
+
 .postCreate {
   align-items: start !important;
 }

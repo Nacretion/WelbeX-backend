@@ -5,13 +5,15 @@ const fsPromises = fs.promises
 
 class  PostController {
     async createPost(request, result) {
-        const {title, content, userId} = request.body
+        const {message, userId} = request.body
+        const date = new Date()
+
         const files = request.files
         let newFiles = []
-        if (title && content && userId) {
+        if (message && userId) {
             const newPost = await db.query(
-                "INSERT INTO post (title, content, user_id) values ($1, $2, $3) RETURNING *",
-                [title, content, userId])
+                "INSERT INTO post (date, message, user_id) values ($1, $2, $3) RETURNING *",
+                [date, message, userId])
             if (files) {
                 files.map(async file => {
                     const filePath = file.path
@@ -37,21 +39,32 @@ class  PostController {
             const files = await db.query("SELECT * FROM file WHERE post_id = $1", [posts.rows[i].id])
             if (files) {
                 for (let i = 0; i < files.rows.length; i++) {
-                    filePaths.push(files.rows[i].path.replace('\\', "/"))
+                    filePaths.push({
+                        path: files.rows[i].path.replace('\\', "/"),
+                        postId: files.rows[0].post_id})
                 }
             }
         }
 
-        console.log(filePaths)
         result.json({posts: posts.rows, filePaths})
     }
 
     async getPostsByUser(request, result){
         const id = request.query.id
-        const posts = await db.query(
-            "SELECT * FROM post WHERE user_id = $1",
-            [id])
-        result.json(posts.rows)
+        console.log(id)
+        let filePaths = []
+        const posts = await db.query("SELECT * FROM post WHERE user_id = $1", [id])
+        for (let i = 0; i < posts.rows.length; i++) {
+            const files = await db.query("SELECT * FROM file WHERE post_id = $1", [posts.rows[i].id])
+            if (files) {
+                for (let i = 0; i < files.rows.length; i++) {
+                    filePaths.push({
+                        path: files.rows[i].path.replace('\\', "/"),
+                        postId: files.rows[0].post_id})
+                }
+            }
+        }
+        result.json({posts: posts.rows, filePaths})
     }
 }
 

@@ -1,11 +1,23 @@
 
 const storageName = "userData"
+const serverUrl = "http://localhost:5000/"
 let token = null
 let userId = null
 let username = null
 let modalRegister = false
 let modalLogIn = false
 let modalCreate = false
+
+const imageTypes = [
+    "JPG", "JPEG", "PNG", "ICO", "GIF", "TIFF", "WebP", "SVG", "CDR", "AI", "RAW"
+]
+const videoTypes = [
+    "3g2", "3gp", "avi", "bin", "dat", "drv", "f4v", "flv", "gtp", "h264", "m4v", "mkv", "mod", "moov",
+    "mov", "mp4", "mpeg", "mpg", "mts", "rm", "rmvb", "vid", "webm", "wm", "wmv"
+]
+
+
+
 
 // password length between 6 and 16
 // english letters, numbers, _ and - chars
@@ -84,6 +96,7 @@ const login = (jwtToken, id) => {
 
 
     getUsername(id).then(() => addUsernameText(username))
+    document.getElementById("createButton").style = ""
 
     swapButtons(
         "loginButton",
@@ -98,6 +111,8 @@ const logout = () => {
     userId = null
 
     removeUsernameText()
+    document.getElementById("createButton").style = "display: none"
+
     localStorage.removeItem(storageName)
     swapButtons(
         "logoutButton",
@@ -110,15 +125,13 @@ const logout = () => {
 const createPost = async (domElement) => {
 
     const fileInput = document.getElementById("files")
-    const title = document.getElementsByName("title")[0].value
-    const content = document.getElementsByName("content")[0].value
+    const message = document.getElementsByName("content")[0].value
     const userId = JSON.parse(localStorage.getItem(storageName)).userId
 
-    if (title && content) {
+    if (message) {
         let data = new FormData()
 
-        data.append('title', title);
-        data.append('content', content);
+        data.append('message', message);
         data.append('userId', userId);
 
         // Добавляем файлы из инпута к данным
@@ -126,6 +139,7 @@ const createPost = async (domElement) => {
             const file = fileInput.files[i]
 
             data.append('file', file)
+
         }
 
         // Отправляем файлы на сервер
@@ -135,62 +149,86 @@ const createPost = async (domElement) => {
         })
             .then(response => response.json())
             .then(json => {
-                getPosts()
+                getPosts(userId)
             })
     }
-    //
-    // if (title && content) {
-    //     const promise = await fetch(
-    //         "http://localhost:5000/api/post",
-    //         {
-    //             method: 'POST',
-    //             body: JSON.stringify({title, content, userId}),
-    //             headers: {'Content-Type': 'application/json'}
-    //         })
-    //         .then(response => response.json())
-    //         .then(json => {
-    //             getPosts()
-    //         })
-    // }
 }
 
 
 const getUsername = async () => {
-    const id = JSON.parse(localStorage.getItem(storageName)).userId
-    const promise = await fetch("http://localhost:5000/api/user/" + id)
+    const promise = await fetch("http://localhost:5000/api/user/" + userId)
         .then(response => response.json())
         .then(json => {
             username = json.username
         })
 }
 
-const getPosts = async () => {
+const getPosts = async (id) => {
     let posts = document.getElementsByClassName('post')
-
+    const url = userId ? "http://localhost:5000/api/post?id=" + userId : "http://localhost:5000/api/posts"
     while(posts[0]) {
         posts[0].parentNode.removeChild(posts[0]);
     }
-
-    const promise = await fetch("http://localhost:5000/api/posts")
+    const promise = await fetch(url)
         .then(response => response.json())
-        .then(json => json.map(post => {
-            addPost(post.id, post.title, post.content)
-        }))
+        .then(json => {
+            return {posts: json.posts, filePaths: json.filePaths}
+
+        })
+        .then(fields => {
+            fields.posts.map(post => {
+                console.log(post.user_id)
+                getUsername(post.user_id).then(() => addPost(post.id, post.date, post.message, username))
+            })
+            fields.filePaths.map(filePaths => {
+                const url = serverUrl + filePaths.path
+                const id = filePaths.postId
+                const type = url.split(".").pop().toUpperCase()
+
+                if (imageTypes.includes(type)) {
+                    console.log(type, "image")
+                    const image = document.createElement("img")
+                    image.className = "postImage"
+                    image.src = url
+                    document.getElementById(id).appendChild(image)
+                }
+                else if (videoTypes.includes(type.toLowerCase())) {
+                    console.log(type, "video")
+                    const video = document.createElement("video")
+                    const source = document.createElement("source")
+                        // <source
+                        //     src="video/duel.mp4"
+                        //     type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'
+                        // />
+                    video.className = "postVideo"
+                    video.controls = true
+                    source.type = 'video/mp4'
+                    source.src = url
+
+                    video.appendChild(source)
+                    document.getElementById(id).appendChild(video)
+                }
+            })
+        })
 }
 
+//
 
-const addPost = (id, title, content) => {
+const addPost = async (id, date, message, username) => {
+    const tempDate = new Date(date).toLocaleDateString("ru-RU")
 
     const newPost = document.createElement("div")
-    const newTitle = document.createElement("h2")
-    const newContent = document.createElement("h4")
+    const newContent = document.createElement("h2")
+    const newDate = document.createElement("h4")
+
+    const correctDate = username + " " + tempDate + " " + new Date(date).toLocaleTimeString("ru-RU")
 
     newPost.className = "post"
     newPost.id = id
-    newTitle.appendChild(document.createTextNode(title))
-    newContent.appendChild(document.createTextNode(content))
+    newDate.appendChild(document.createTextNode(correctDate))
+    newContent.appendChild(document.createTextNode(message))
 
-    newPost.appendChild(newTitle)
+    newPost.appendChild(newDate)
     newPost.appendChild(document.createElement("hr"))
     newPost.appendChild(newContent)
     document.getElementById("main").appendChild(newPost)
@@ -264,9 +302,9 @@ const hideModal = () => {
 
 
 if (localStorage.getItem(storageName)) {
-    let id = JSON.parse(localStorage.getItem(storageName)).userId
+    userId = JSON.parse(localStorage.getItem(storageName)).userId
 
-    getUsername(id).then(() => addUsernameText(username))
+    getUsername(userId).then(() => addUsernameText(username))
 
 
     swapButtons(
@@ -274,6 +312,8 @@ if (localStorage.getItem(storageName)) {
         "logoutButton",
         "logout()",
         "Log out")
+} else {
+    document.getElementById("createButton").style = "display: none"
 }
 
 getPosts()
